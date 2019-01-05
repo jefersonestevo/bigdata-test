@@ -1,6 +1,7 @@
 package br.com.test.bigdata;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.social.twitter.api.*;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +23,19 @@ public class TwitterStreamingListener implements StreamListener {
     @Autowired
     private ExecutorService executorService;
 
+    @Autowired
+    private Environment env;
+
     private LinkedBlockingQueue<Tweet> queue;
 
     @PostConstruct
     public void init() {
+        String trackTerm = this.env.getProperty("twitter.track");
+
         queue = new LinkedBlockingQueue<>();
+
         tweetProcessor.setQueue(queue);
+        tweetProcessor.setTopicName(this.env.getProperty("twitter.kafka.topic"));
 
         executorService.execute(tweetProcessor);
 
@@ -35,7 +43,7 @@ public class TwitterStreamingListener implements StreamListener {
         listeners.add(this);
 
         FilterStreamParameters parameters = new FilterStreamParameters();
-        parameters.track("Netflix");
+        parameters.track(trackTerm);
 
         twitter.streamingOperations().filter(parameters, listeners);
     }
