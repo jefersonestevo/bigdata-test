@@ -1,4 +1,4 @@
-package br.com.test.bigdata;
+package br.com.test.bigdata.twitter.reader;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
