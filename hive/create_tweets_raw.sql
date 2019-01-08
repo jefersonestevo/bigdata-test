@@ -1,0 +1,5 @@
+USE TWEET;
+
+CREATE TABLE IF NOT EXISTS TWEETS_RAW (
+    json_response STRING
+);
